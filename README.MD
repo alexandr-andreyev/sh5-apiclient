@@ -2,7 +2,7 @@ SH5 WebApi Client for StoreHouse v5
 
 Example:
 
-package main
+`package main
 
 import (
 "fmt"
@@ -23,4 +23,4 @@ if err != nil {
 fmt.Print("error:", err)
 }
 fmt.Printf("%s", resp)
-}
+}`
