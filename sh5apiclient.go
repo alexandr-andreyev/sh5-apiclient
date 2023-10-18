@@ -1,12 +1,14 @@
 package sh5apiclient
 
 import (
-	"fmt"
+	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
 	"time"
 )
 
-type Sh5Client struct {
+type Client struct {
 	BaseURL    string
 	Port       int
 	UserName   string
@@ -14,19 +16,26 @@ type Sh5Client struct {
 	HTTPClient *http.Client
 }
 
-// type errorResponse struct {
-// 	Code    int    `json:"code"`
-// 	Message string `json:"message"`
-// }
+type errorResponse struct {
+	ErrorCode  int    `json:"errorCode"`
+	ErrMessage string `json:"errMessage"`
+	Version    string `json:"Version"`
+	Username   string `json:"UserName"`
+}
 
-// type successResponse struct {
-// 	Code int         `json:"code"`
-// 	Data interface{} `json:"data"`
-// }
+type successResponse struct {
+	ErrorCode  int    `json:"errorCode"`
+	ErrMessage string `json:"errMessage"`
+	Version    string `json:"Version"`
+	Username   string `json:"UserName"`
+	Actioname  string `json:"actionName"`
+	ActionType string `json:"actionType"`
+}
 
-func NewClient(BaseURL string, Port int, UserName, Password string) *Sh5Client {
-	return &Sh5Client{
+func NewClient(BaseURL string, Port int, UserName, Password string) *Client {
+	return &Client{
 		BaseURL:  BaseURL,
+		Port:     Port,
 		UserName: UserName,
 		Password: Password,
 		HTTPClient: &http.Client{
@@ -35,18 +44,25 @@ func NewClient(BaseURL string, Port int, UserName, Password string) *Sh5Client {
 	}
 }
 
-// Request server settings and database information
-func (c Sh5Client) Sh5Info() error {
-	url := fmt.Sprintf("%s:%d/api/sh5info", c.BaseURL, c.Port)
-	resp, err := c.HTTPClient.Get(url)
+func (с *Client) doRequest(req *http.Request) ([]byte, error) {
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer resp.Body.Close()
-	fmt.Printf("response: %+v", resp.Body)
-	return nil
-}
+	body, err := io.ReadAll(resp.Body) //body
+	if err != nil {
+		return nil, err
+	}
 
-func (c Sh5Client) Sh5Exec() {
+	var errResp errorResponse
+	if err = json.NewDecoder(resp.Body).Decode(&errResp); err == nil {
+		return nil, errors.New(errResp.ErrMessage)
+	}
+	if errResp.ErrorCode != 0 {
+		return nil, errors.New(errResp.ErrMessage)
+	}
 
+	return body, nil
 }
