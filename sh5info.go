@@ -1,38 +1,24 @@
 package sh5apiclient
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"net/http"
 )
 
-type Sh5InfoRequest struct {
-	Username string `json:"UserName"`
-	Password string `json:"Password"`
-}
-
 // Request server settings and database information
-func (c Client) Sh5Info() ([]byte, error) {
+func (c Client) Sh5Info() (*sh5SHInfoResponse, error) {
 	url := fmt.Sprintf("%s:%d/api/sh5info", c.BaseURL, c.Port)
 
-	sh5data := Sh5InfoRequest{
+	sh5data := Sh5BaseRequest{
 		Username: c.UserName,
 		Password: c.Password,
 	}
 
-	jsonSh5Data, _ := json.Marshal(&sh5data)
-	paydata := bytes.NewReader(jsonSh5Data)
-
-	req, err := http.NewRequest("POST", url, paydata)
+	req, err := c.newRequest("POST", url, sh5data)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/json")
 
-	bytes, err := c.doRequest(req)
-	if err != nil {
-		return nil, err
-	}
-	return bytes, nil
+	var shInfo sh5SHInfoResponse
+	_, err = c.do(req, &shInfo)
+	return &shInfo, err
 }
