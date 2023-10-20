@@ -26,3 +26,31 @@ type SH5DB struct {
 	Size    string `json:"Size"`
 	Version string `json:"Version"`
 }
+
+// proc request struct
+type Sh5ProcRequest struct {
+	Sh5BaseRequest
+	ProcName string
+	Input    []ShInputData
+}
+
+// inputdata for proc
+type ShInputData struct {
+	Head     string   `json:"head"`
+	Original []string `json:"original"`
+	Values   [][]any  `json:"values"`
+}
+
+// sh5 proc response
+type Sh5ProcResponse struct {
+	sh5BaseResponse
+	ShTable []ShTable `json:"shTable"`
+}
+
+type ShTable struct {
+	Head     string     `json:"head"`
+	RecCount int        `json:"recCount"`
+	Original []string   `json:"original"`
+	Fields   []string   `json:"fields"`
+	Values   [][]string `json:"values"`
+}
