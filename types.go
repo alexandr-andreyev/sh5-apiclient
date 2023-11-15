@@ -6,11 +6,11 @@ type Sh5BaseRequest struct {
 }
 
 type sh5BaseResponse struct {
-	Sh5BaseRequest
+	UserName   string `json:"UserName"`
 	ErrorCode  int    `json:"errorCode"`
 	ErrMessage string `json:"errMessage"`
 	Version    string `json:"Version"`
-	//Actioname  string `json:"actionName"`
+	Actioname  string `json:"actionName"`
 	//ActionType string `json:"actionType"`
 }
 
@@ -48,9 +48,14 @@ type Sh5ProcResponse struct {
 }
 
 type ShTable struct {
-	Head     string     `json:"head"`
-	RecCount int        `json:"recCount"`
-	Original []string   `json:"original"`
-	Fields   []string   `json:"fields"`
-	Values   [][]string `json:"values"`
+	Head     string   `json:"head"`
+	RecCount int      `json:"recCount"`
+	Original []string `json:"original"`
+	Fields   []string `json:"fields"`
+	Values   [][]any  `json:"values"`
+}
+
+type Sh5ProcParseResponse struct {
+	sh5BaseResponse
+	Data map[string][]map[string]string
 }

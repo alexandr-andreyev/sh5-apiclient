@@ -54,6 +54,7 @@ func (с *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+
 	err = json.NewDecoder(resp.Body).Decode(v)
 	return resp, err
 }
