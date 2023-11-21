@@ -36,9 +36,9 @@ type Sh5ProcRequest struct {
 
 // inputdata for proc
 type ShInputData struct {
-	Head     string   `json:"head"`
-	Original []string `json:"original"`
-	Values   [][]any  `json:"values"`
+	Head     string          `json:"head"`
+	Original []string        `json:"original"`
+	Values   [][]interface{} `json:"values"`
 }
 
 // sh5 proc response
@@ -48,11 +48,11 @@ type Sh5ProcResponse struct {
 }
 
 type ShTable struct {
-	Head     string   `json:"head"`
-	RecCount int      `json:"recCount"`
-	Original []string `json:"original"`
-	Fields   []string `json:"fields"`
-	Values   [][]any  `json:"values"`
+	Head     string          `json:"head"`
+	RecCount int             `json:"recCount"`
+	Original []string        `json:"original"`
+	Fields   []string        `json:"fields"`
+	Values   [][]interface{} `json:"values"`
 }
 
 type Sh5ProcParseResponse struct {
