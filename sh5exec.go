@@ -45,7 +45,6 @@ func (c Client) Sh5ExecWithParse(req *Sh5ProcResponse, fields bool) (*Sh5ProcPar
 
 			for keyField, fieldName := range headDataset.Fields {
 				for valueId, value := range headDataset.Values[keyField] {
-					fmt.Println(keyField, valueId, fieldName, value)
 					valuesArr[valueId][fieldName] = fmt.Sprintf("%v", value)
 				}
 			}
