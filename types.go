@@ -54,7 +54,6 @@ type ShTable struct {
 	Fields   []string        `json:"fields"`
 	Values   [][]interface{} `json:"values"`
 }
-
 type Sh5ProcParseResponse struct {
 	sh5BaseResponse
 	Data map[string][]map[string]string

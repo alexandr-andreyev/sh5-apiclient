@@ -24,6 +24,7 @@ func (c Client) Sh5Exec(procName string, inputData []ShInputData) (*Sh5ProcRespo
 
 	var sh5Response Sh5ProcResponse
 	_, err = c.do(req, &sh5Response)
+
 	return &sh5Response, err
 }
 
@@ -45,7 +46,15 @@ func (c Client) Sh5ExecWithParse(req *Sh5ProcResponse, fields bool) (*Sh5ProcPar
 
 			for keyField, fieldName := range headDataset.Fields {
 				for valueId, value := range headDataset.Values[keyField] {
-					valuesArr[valueId][fieldName] = fmt.Sprintf("%v", value)
+					switch value.(type) {
+					case float64:
+						// Привести к int
+						newValue := int(value.(float64))
+						valuesArr[valueId][fieldName] = fmt.Sprintf("%v", newValue)
+					default:
+						valuesArr[valueId][fieldName] = fmt.Sprintf("%v", value)
+					}
+
 				}
 			}
 			head := fmt.Sprintf("Head%s", headDataset.Head)
