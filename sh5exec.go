@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func (c Client) Sh5Exec(procName string, inputData []ShInputData) (*Sh5ProcResponse, error) {
+func (c Client) Sh5ExecRaw(procName string, inputData []ShInputData) (*Sh5ProcResponse, error) {
 	url := fmt.Sprintf("%s:%d/api/sh5exec", c.BaseURL, c.Port)
 
 	input := Sh5ProcRequest{
@@ -28,7 +28,12 @@ func (c Client) Sh5Exec(procName string, inputData []ShInputData) (*Sh5ProcRespo
 	return &sh5Response, err
 }
 
-func (c Client) Sh5ExecWithParse(req *Sh5ProcResponse, fields bool) (*Sh5ProcParseResponse, error) {
+func (c Client) Sh5ExecPrettyJson(procName string, inputData []ShInputData, fields bool) (*Sh5ProcParseResponse, error) {
+	req, err := c.Sh5ExecRaw(procName, inputData)
+	if err != nil {
+		return nil, err
+	}
+
 	resultResponse := Sh5ProcParseResponse{}
 	resultResponse.sh5BaseResponse = req.sh5BaseResponse
 
