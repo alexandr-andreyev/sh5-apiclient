@@ -6,8 +6,6 @@ import (
 )
 
 func (c Client) Sh5ExecRaw(procName string, inputData []ShInputData) (*Sh5ProcResponse, error) {
-	url := fmt.Sprintf("%s:%d/api/sh5exec", c.BaseURL, c.Port)
-
 	input := Sh5ProcRequest{
 		Sh5BaseRequest: Sh5BaseRequest{
 			Username: c.UserName,
@@ -17,7 +15,7 @@ func (c Client) Sh5ExecRaw(procName string, inputData []ShInputData) (*Sh5ProcRe
 		Input:    inputData,
 	}
 
-	req, err := c.newRequest("POST", url, input)
+	req, err := c.newRequest("POST", c.BaseURL, input)
 	if err != nil {
 		return nil, err
 	}

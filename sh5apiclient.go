@@ -3,6 +3,7 @@ package sh5apiclient
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -10,18 +11,22 @@ import (
 
 type Client struct {
 	BaseURL    string
-	Port       int
 	UserName   string
 	Password   string
 	HTTPClient *http.Client
 }
 
-func NewClient(BaseURL string, Port int, UserName, Password string) *Client {
+func NewClient(baseURL string, port int, userName, password string, isSSL bool) *Client {
+	scheme := "http"
+	if isSSL {
+		scheme = "https"
+	}
+
+	fullBaseURL := fmt.Sprintf("%s://%s:%d", scheme, baseURL, port)
 	return &Client{
-		BaseURL:  BaseURL,
-		Port:     Port,
-		UserName: UserName,
-		Password: Password,
+		BaseURL:  fullBaseURL,
+		UserName: userName,
+		Password: password,
 		HTTPClient: &http.Client{
 			Timeout: time.Minute,
 		},
